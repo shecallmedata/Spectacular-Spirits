@@ -1,3 +1,3 @@
 # Spectacular-Spirits
-html/sql project
+html/sql project,
 a mock distillery website
