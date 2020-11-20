@@ -131,7 +131,7 @@ HashMap<String, ArrayList<Object>> productList = (HashMap<String, ArrayList<Obje
 		"<td>"+currFormat.format(total)+"</td>"+
 		"</tr></tbody></table>");
 	
-	out.print(" <strong>Order completed. Will be shipped soon... <div></div> order reference number is: "+orderId+" <div></div>Shipping to Customer Name: "+rst.getString(3)+"</strong>");
+	out.print(" <strong>Order completed. Will be shipped soon... <div></div> order reference number is: "+orderId+" <div></div>Shipping to Customer Id: "+rst.getString(1)+" Name: "+rst.getString(2)+" "+rst.getString(3)+"</strong>");
 	//out.print("</div>");
 	
 	productList.clear();
