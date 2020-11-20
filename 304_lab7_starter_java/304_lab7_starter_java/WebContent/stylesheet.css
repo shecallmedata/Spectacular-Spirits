@@ -1,0 +1,40 @@
+* {
+    margin: 0 auto;
+}
+html, body {
+   height: 100%;
+   margin: 0 auto;
+   text-align: center;
+   padding-top: 25px;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+   .navbar {
+     margin-bottom: 0;
+     border-radius: 0;
+   }
+   
+   /* Add a gray background color and some padding to the footer */
+   footer {
+     background-color: aliceblue;
+     padding: 25px;
+     margin: 0 auto;
+     text-align: center;
+   }
+   
+
+/* Styling for sticky footer */
+.page-wrap {
+   min-height: 100%;
+   /* equal to footer height */
+   margin-bottom: -60 px; 
+   margin: 0 auto;
+   text-align: center;
+}
+.page-wrap:after {
+   content: "";
+   display: block;
+}
+.site-footer, .page-wrap:after {
+   height: 60 px; 
+}
