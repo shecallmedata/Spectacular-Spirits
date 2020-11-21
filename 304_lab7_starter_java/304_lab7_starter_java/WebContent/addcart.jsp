@@ -17,24 +17,32 @@ String id = request.getParameter("id");
 String name = request.getParameter("name");
 String price = request.getParameter("price");
 Integer quantity = new Integer(1);
+String pid = request.getParameter("delete");
 
 // Store product information in an ArrayList
 ArrayList<Object> product = new ArrayList<Object>();
-product.add(id);
-product.add(name);
-product.add(price);
-product.add(quantity);
+if(pid == null) {
+	
+	product.add(id);
+	product.add(name);
+	product.add(price);
+	product.add(quantity);
 
-// Update quantity if add same item to order again
-if (productList.containsKey(id))
-{	product = (ArrayList<Object>) productList.get(id);
-	int curAmount = ((Integer) product.get(3)).intValue();
-	product.set(3, new Integer(curAmount+1));
+	// Update quantity if add same item to order again
+	if (productList.containsKey(id))
+	{	product = (ArrayList<Object>) productList.get(id);
+		int curAmount = ((Integer) product.get(3)).intValue();
+		product.set(3, new Integer(curAmount+1));
+	}
+	else{	
+		productList.put(id,product);
+  	}
 }
-else
-	productList.put(id,product);
+else {
+	
+	productList.remove(pid);
+}
 
 session.setAttribute("productList", productList);
 %>
 <jsp:forward page="showcart.jsp" />
-
