@@ -56,6 +56,11 @@
     <body style="color:rgb(1, 1, 39);font-size:20px; background-color:aliceblue;">
 </head>
 <body>
+	<script>
+		function update(nid,nqty) {
+			window.location="showcart.jsp?update="+nid+"&newqty="+nqty;
+		}
+	</script>
 
 <%
 // Get the current list of products
@@ -69,30 +74,43 @@ if (productList == null)
 else
 {
 	NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
+
 	out.println("<h1>Your Shopping Cart</h1>");
-	out.print("<table><tr><th class=\"pcolor\">Product Id</th><th class=\"pcolor\">Product Name</th><th class=\"pcolor\">Quantity</th>");
-	out.println("<th class=\"pcolor\">Price</th><th class=\"pcolor\">Subtotal</th></tr>");
+	out.print("<table><tr><th>Product Id</th><th>Product Name</th><th>Quantity</th>");
+	out.println("<th>Price</th><th>Subtotal</th></tr>");
 
 	double total =0;
 	Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
+	
 	while (iterator.hasNext()) 
-	{	Map.Entry<String, ArrayList<Object>> entry = iterator.next();
+	{	
+		Map.Entry<String, ArrayList<Object>> entry = iterator.next();
 		ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
 		if (product.size() < 4)
 		{
 			out.println("Expected product with four entries. Got: "+product);
 			continue;
 		}
-		
-		out.print("<tr><td>"+product.get(0)+"</td>");
-		out.print("<td>"+product.get(1)+"</td>");
 
-		out.print("<td align=\"center\">"+product.get(3)+"</td>");
-		Object price = product.get(2);
-		Object itemqty = product.get(3);
-		double pr = 0;
-		int qty = 0;
+		String nqty = request.getParameter("newqty");
+		String nid = request.getParameter("update");
 		
+		
+
+		if(nqty != null && nid != null){
+			if(nid.equals(product.get(0))){
+				product.set(3,Integer.parseInt(nqty));
+			}
+		}
+
+		out.print("<tr><td>"+product.get(0)+"</td>");
+			out.print("<td>"+product.get(1)+"</td>");
+			
+			Object price = product.get(2);
+			Object itemqty = product.get(3);
+			double pr = 0;
+			int qty = 0;
+			
 		try
 		{
 			pr = Double.parseDouble(price.toString());
@@ -110,8 +128,18 @@ else
 			out.println("Invalid quantity for product: "+product.get(0)+" quantity: "+qty);
 		}		
 
-		out.print("<td align=\"right\">"+currFormat.format(pr)+"</td>");
-		out.print("<td align=\"right\">"+currFormat.format(pr*qty)+"</td></tr>");
+
+		String remLink = "addcart.jsp?delete="+product.get(0)+"";	
+		
+		out.print
+		("<form method=\"get\" action=\"showcart.jsp\">"
+		+"<td align=\"center\"><input type=\"text\" name=\"qty\" size=\"3\" value="+product.get(3)+"></td>"
+		+"<td align=\"right\">"+currFormat.format(pr)+"</td>"
+		+"<td align=\"right\">"+currFormat.format(pr*qty)+"</td>"
+		+"<td align=\"left\"><a href="+remLink+">Remove Item</a></td>"
+		+"<td align=\"left\"><input type=\"button\" onclick=\"update("+product.get(0)+", qty.value)\" value=\"Update Quantity\"></td>"
+		+"</form>");
+
 		out.println("</tr>");
 		total = total +pr*qty;
 	}
@@ -122,7 +150,6 @@ else
 	out.println("<h2><a href=\"checkout.jsp\">Check Out</a></h2>");
 }
 %>
-<h2><a href="listprod.jsp?productName=">Continue Shopping</a></h2>
+<h2><a href="listprod.jsp">Continue Shopping</a></h2>
 </body>
 </html> 
-
