@@ -71,8 +71,8 @@ String binaryImage =  "displayImage.jsp?id="+productId;
 
 out.print("<table>"+
     "<th><h2>"+productName+"</h2></th>"+
-    "<tr><td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:auto; width: auto;' src=\""+productImageURL+"\"></td>"+
-        "<td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:auto; width: auto;' src=\"binaryImage\"></td></tr>"+
+    "<tr><td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+productImageURL+"\"></td>"+
+        "<td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+binaryImage+"\"></td></tr>"+
 "<tr>"+
         "<th>Id</th>"+
         "<th>Price</th>"+
