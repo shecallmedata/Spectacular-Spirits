@@ -19,7 +19,7 @@ catch(Exception e)
 }
 
 // TODO: Modify SQL to retrieve productImage given productId
-String sql = "";
+String sql = "select productImage from product where id=?";
 
 try 
 {
