@@ -4,28 +4,37 @@
 <%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
+	<style>
+		.pimage {
+		  position: absolute;
+				  top:0px;
+				  margin-left:21%;
+				 
+		}
+		</style>
 <head>
-	<header style= "margin: 20px;
-	padding: 40px;">
-
-<title class= "header">Spectacular Spirits Grocery Order List <color> </color:></title>
+	<header style= "margin: 0px;
+	padding: 90px;">
+	<figure>
+		<img src="otherImages/SS---1.png"  width="auto" height="275" class="pimage">
+	  
+		</figure>
+	</header>
 	
 </head>
 <style>
-.header {
-    overflow: hidden;
-    background-color: powderblue ;
-    padding: 20px 10px;
-    text-align: center;
-    font-family: serif;
-	color: rgb(1, 1, 39);
-  }
+.ptext{
+	font-family: sans-serif;
+	font-weight: 700;
+	font-size: 13px;
+}
+
 </style>
 <body>
+
+	<body class="ptext"; style="background: url(https://i2.wp.com/3amigostequila.com/wp-content/uploads/2017/11/distillery-close-up.jpg?ssl=1); background-repeat: no-repeat; background-size: 115%;">
 	
-	<body style="background-color:aliceblue;">
-	
-<h1 class= "header">Spectacular Spirits </h1>
+
 <hr />
 <br/>
 <h2 style="text-align: center">Search for the products you want to buy:</h2>
@@ -89,12 +98,12 @@ try(Connection con=DriverManager.getConnection(url, uid, pw);)
 			String pnameEncoded = java.net.URLEncoder.encode(pname,"UTF-8").replace("+","%20");
 			String cartLink = "addcart.jsp?id="+pid+"&name="+pnameEncoded+"&price="+price;
 
-			
+			String productLink = "product.jsp?id="+pid+"&name="+pnameEncoded+"&price="+price;
 
 
 			out.print("<tr>"+
 				"<td><a href="+cartLink+">Add to Cart</a></td>"+
-				"<td>"+pname+"</td>"+
+				"<td><a href="+productLink+">"+pname+"</a></td>"+
 				"<td>"+pdesc+"</td>"+
 				"<td>"+currFormat.format(price)+"</td>"+
 			  "</tr>");
