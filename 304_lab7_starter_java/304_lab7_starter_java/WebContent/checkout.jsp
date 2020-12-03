@@ -5,41 +5,45 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title><h2>Spirits</h2> </title>
-</head>
-<h2 class="header">Spectacular Spirits</h2>
-<h3>Checkout Line</h3>
-<h1 style="color:rgb(1, 1, 39); font-size:20;">Enter your customer id and password to complete the transaction:</h1>
+
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
+	<%@ include file="header.jsp" %>
+	<body style="background: url(https://bentwoodinn.com/wp-content/uploads/2017/02/wyoming-whiskey.jpg); ">
+
+		
+	
+		
+	<hr />
+	<div id="main-content"></div>
+<table><th><h1 style="color:white; font-size:20;">Enter your customer id and password to complete the transaction:</h1></th></table>
 
 <style>
-   .header {
-    overflow: hidden;
-    background-color: powderblue ;
-    padding: 20px 10px;
-    text-align: center;
-    font-family: serif;
-    color: rgb(1, 1, 39);
-  }
+		table, th, td {
+	background-color: rgba(241, 112, 52, 0.5);
+}
+
   .footer {
   position: fixed;
   padding: 20px 10px;
   right: 0;
   bottom: 0;
   width: 20%;
-  background-color: powderblue ;
-  color: blue;
+  background-color:rgba(241, 112, 52, 0.5);
+  color: black;
   text-align:center;
-  }
+  text-decoration: none;
+}
 </style>
 <body>
 
-    <body style="color:rgb(1, 1, 39);font-size:20px; background-color:aliceblue;">
+    <body>
 
 
  <div style="padding-top: 5px;">
-<!-- <form method="get" action="order.jsp">
-    <label>Customer Id:</label> <input type="text" name="customerId" size="30">
-</form> -->
 </div>
 
 
@@ -47,14 +51,15 @@
 
 <div style="padding: 20px;"></div>
 
-<form name="MyForm" method=post action="order.jsp">
+<table><th><form name="MyForm" method=post action="order.jsp">
     <label>Customer Id:</label> <input type="text" name="customerId" size="30">
 
   
   <div style="padding: 2px;"></div>
-<label>Password: &nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="password" placeholder="Password" name="pw" size="30">
+  <form name="MyForm" method=post action="order.jsp">
+<label>Password: &nbsp;&nbsp;&nbsp;&nbsp;</label> <input type="text" name="password" size="30">
 <div style="padding: 2px;"></div>
-<input type="Submit" value="Submit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="Reset" value="Reset">
+<input type="Submit" value="Submit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="Reset" value="Reset"></th></table>
 
 
 </form>

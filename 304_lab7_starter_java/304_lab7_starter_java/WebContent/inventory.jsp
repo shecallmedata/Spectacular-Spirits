@@ -5,39 +5,42 @@
 <%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
-	
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    <title>
-    </title>
-</head>
-<%@ include file="header.jsp" %>
-<body style="background: url(otherImages/distilley2.jpg); background-size: 115%;">
-	
-<style>
-	  .footer {
+
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
+	<style>
+		table, th, td {
+	background-color: rgba(241, 112, 52, 0.5);
+}
+
+.footer {
   position: fixed;
   padding: 20px 10px;
   right: 0;
   bottom: 0;
   width: 20%;
-  background-color:rgba(241, 112, 52, 0.5);
-  color: black;
+  background-color: rgba(241, 112, 52, 0.5);
+  color: blue;
   text-align:center;
-  text-decoration: none;
-}
-table, th, td {
-	background-color: rgba(241, 112, 52, 0.5);
 }
 	</style>
+	<%@ include file="header.jsp" %>
+	<body style="background: url(https://images3.alphacoders.com/252/thumb-1920-252185.jpg); background-size: 100%;">
+
+		
 	
-<body>
+		
+	<hr />
+	<div id="main-content"></div>
+	
 	
 <hr />
-<div id="main-content">
 <br/>
-
+<table align="center"><th><h2 style="text-align: right">Order Information</h2></th></table>
 
 <% 
 //Note: Forces loading of SQL Server driver
@@ -55,34 +58,28 @@ catch (java.lang.ClassNotFoundException e)
 try (Connection con=DriverManager.getConnection(url, uid, pw);
 	Statement stmt = con.createStatement();)
 
-{	String sql = "select os.orderId, os.orderDate, ci.customerId, concat(ci.firstName, ' ' , ci.lastName), os.totalAmount from customer ci join ordersummary as os on ci.customerId = os.customerId";	
-	String sql2= "select productId, quantity, price from orderproduct op where orderId=? order by productId asc";
+{	String sql = "SELECT * FROM productinventory ORDER BY warehouseId ASC";	
+	String sql2= "select productId, warehouseId, quantity, price from productinventory op where warehouseId=? order by productId asc";
 	PreparedStatement ps = con.prepareStatement(sql2);
 	ResultSet rst = stmt.executeQuery(sql);	
 	NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
-	out.print("<table border='1'><T1>"+
-		"<tr align='center'><th><h1 align='center'>Order Information</h1></th></tr>"+
-		"<tr>"+
-
-			"<th>order Id</th>"+
-			"<th>order Date</th>"+
-			"<th>Customer Id</th>"+
-			"<th>Customer Name</th>"+
-			"<th>Total Amount</th>"+
-		"</tr>");
+	
 
 	while (rst.next())
-	{	
-		String ordId= rst.getString(1);
+	{
+		
+		out.print("<T1><table border='1'>"+
+			"<tr>"+
+				"<th>Warehouse ID</th>"+
+			"</tr>");
+
+
+		int warehouseId= rst.getInt(1);
 	
-		out.print("<tr>"+
-						"<td>"+ordId+"</td>"+
-						"<td>"+rst.getString(2)+"</td>"+
-						"<td>"+rst.getString(3)+"</td>"+
-						"<td>"+rst.getString(4)+"</td>"+
-						"<td>"+currFormat.format(Double.parseDouble(rst.getString(5)))+"</td>"+
-					"</tr>");
-		ps.setString(1, ordId);
+		out.print("<tr align='middle'>"+
+					"<td>"+warehouseId+"</td>"+					
+				 "</tr>");
+		ps.setInt(1, warehouseId);
 		ResultSet rst2 = ps.executeQuery();
 		
 		
@@ -91,20 +88,24 @@ try (Connection con=DriverManager.getConnection(url, uid, pw);
 							"<td colspan='5'>" + 
 							  "<table border='1'>" + 
 						  "<tr>" +
-						  "<th>Product Id</th>"+
+						  "<th>Product ID</th>"+
 						  "<th>Quantity</th>"+
-						  "<th>Price</th>"+
+						  "<th>Price Per Item</th>"+
 					  " </tr>");
 		while(rst2.next()){
 			out.print("<tr>"+
 						   "<td>"+rst2.getString(1)+"</td>"+
-						   "<td>"+rst2.getString(2)+"</td>"+
-						   "<td>"+currFormat.format(rst2.getDouble(3))+"</td>"+
+						   "<td>"+rst2.getString(3)+"</td>"+
+						   "<td>"+currFormat.format(rst2.getDouble(4))+"</td>"+
 					 " </tr>");
 		}
-		out.print("</table>");
+
+	
+		out.print("</table></td></tr>");
+
+		out.print("<br>"+"</br>");
 	}
-	out.print("</T1></table>");
+	
 	
 	
 }
@@ -133,8 +134,6 @@ catch (SQLException ex)
 
 // Close connection
 %>
-</div>
-<h3 class="footer"><a href="listprod.jsp?productName=">Continue Shopping</a>&nbsp;&nbsp;<a href=index.jsp>Home</a></h3>
+<h3 class="footer"><a href="listprod.jsp?productName=">Continue Shopping</a></h3>
 </body>
 </html>
-

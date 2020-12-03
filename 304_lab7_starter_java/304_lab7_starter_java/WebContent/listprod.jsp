@@ -4,44 +4,47 @@
 <%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html>
-	<style>
-		.pimage {
-		  position: absolute;
-				  top:0px;
-				  margin-left:21%;
-				 
-		}
-		</style>
-<head>
-	<header style= "margin: 0px;
-	padding: 90px;">
-	<figure>
-		<img src="otherImages/SS---1.png"  width="auto" height="275" class="pimage">
-	  
-		</figure>
-	</header>
-	
-</head>
-<style>
-.ptext{
-	font-family: sans-serif;
-	font-weight: 700;
-	font-size: 13px;
+	<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+		<style>
+			.ptext{
+				font-family: sans-serif;
+				font-weight: 700;
+				font-size: 13px;
+			}
+			table, th, td {
+	background-color: rgba(241, 112, 52, 0.5);
 }
+			.footer {
+			  position: fixed;
+			  padding: 5px 5px;
+			  right: 0;
+			  bottom: 0;
+			  width: 10%;
+			  background-color:rgba(241, 112, 52, 0.5);
+			  color: black;
+			  text-align:center;
+			  text-decoration: none;
+			}
+			
+			</style>
+		<body style="background: url(otherImages/ontherox.jpg); ">
+		
+		<%@ include file="jdbc.jsp" %>
+		<%@ include file="header.jsp" %>
+		
+		
 
-</style>
-<body>
 
-	<body class="ptext"; style="background: url(https://i2.wp.com/3amigostequila.com/wp-content/uploads/2017/11/distillery-close-up.jpg?ssl=1); background-repeat: no-repeat; background-size: 115%;">
+		<div id="main-content">
 	
 
 <hr />
 <br/>
-<h2 style="text-align: center">Search for the products you want to buy:</h2>
 
-<form method="get" action="listprod.jsp">
+<table><th><h2>Search For a Product</h2></th></table>
+<form  method="get" action="listprod.jsp">
 <input type="text" name="productName" size="50">
-<input type="submit" value="Submit"><input type="reset" value="Reset"> (Leave blank for all products)
+<input type="submit" value="Submit"><input type="reset" value="Reset"><div style="color:white">(Leave blank for all products)</div> 
 
 </form>
 
@@ -77,7 +80,7 @@ try(Connection con=DriverManager.getConnection(url, uid, pw);)
 	boolean generaldisplay=true;
 	NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
 	
-
+	
 		out.print("<br><br><table>"+
 					"<thead><tr>"+
 						"<th>Add to cart</th>"+
@@ -102,7 +105,7 @@ try(Connection con=DriverManager.getConnection(url, uid, pw);)
 
 
 			out.print("<tr>"+
-				"<td><a href="+cartLink+">Add to Cart</a></td>"+
+				"<td><a href="+cartLink+">Add to Cart</a></td>"+ 
 				"<td><a href="+productLink+">"+pname+"</a></td>"+
 				"<td>"+pdesc+"</td>"+
 				"<td>"+currFormat.format(price)+"</td>"+
@@ -136,6 +139,6 @@ con.close();
 // NumberFormat currFormat = NumberFormat.getCurrencyInstance();
 // out.println(currFormat.format(5.0);	// Prints $5.00
 %>
-
+<h3 class="footer"><a href=index.jsp >Home</a></h3>
 </body>
 </html>

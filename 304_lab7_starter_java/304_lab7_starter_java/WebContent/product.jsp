@@ -1,35 +1,28 @@
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
-<%@ include file="jdbc.jsp" %>
+
 <%@ page import="java.util.Locale" %>
 
+<!DOCTYPE html>
 <html>
 <head>
-    <h2 class="header">Spectacular Spirits</h2>
-<title>Product Information</title>
-<link href="css/bootstrap.min.css" rel="stylesheet">
-</head>
 
-
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
+    
+    
 
 <style>
-    	.pimage {
-			float: right;
-  display: block;
-  margin-left: 15px;
-  margin-right: 15px;
-  width: 45%;
-  height: 45%;
+      
+    table, th, td {
+        background-color: rgba(241, 112, 52, 0.5);
 }
-	.header {
-	 overflow: hidden;
-	 background-color: powderblue ;
-	 padding: 20px 10px;
-	 text-align: center;
-	 font-family: serif;
-	 color: rgb(1, 1, 39);
-   }
+
+    	
    .pstyle{
 	   font-size: large
 	   font-weight: bold;
@@ -37,19 +30,33 @@
     .alnright { text-align: right; }
  </style>
  
-	 <body style="color:rgb(1, 1, 39);font-size:20px; background-color:aliceblue;">
 
-<body>
+
+ <body style="background: url(otherImages/distilley2.jpg); background-size: 100%;">
 
 <%@ include file="header.jsp" %>
-
+<%@ include file="jdbc.jsp" %>
 <%
+
 // Get product name to search for
 // TODO: Retrieve and display info for the product
 // String productId = request.getParameter("productid");
+String url = "jdbc:sqlserver://db:1433;DatabaseName=tempdb;";
+String uid = "SA";
+String pw = "YourStrong@Passw0rd";
 
-try{
-    getConnection();
+Connection con = DriverManager.getConnection(url, uid, pw);
+
+try
+{	// Load driver class
+	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+}
+catch (java.lang.ClassNotFoundException e)
+{
+	out.println("ClassNotFoundException: " + e);
+}
+
+
 String prodId = request.getParameter("id");
 String sql = "select * from product where productId=? ";
 
@@ -67,30 +74,39 @@ String productImageURL= rst.getString(4);
 String productImageBinary=rst.getString(5);
 String pnameEncoded = java.net.URLEncoder.encode(productName,"UTF-8").replace("+","%20");
 String cartLink = "addcart.jsp?id="+productId+"&name="+pnameEncoded+"&price="+productPrice;
-String binaryImage =  "displayImage.jsp?id="+productId;
+//String binaryImage =  "displayImage.jsp?id="+productId;
 
-out.print("<table>"+
-    "<th><h2>"+productName+"</h2></th>"+
-    "<tr><td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+productImageURL+"\"></td>"+
-        "<td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+binaryImage+"\"></td></tr>"+
-"<tr>"+
-        "<th>Id</th>"+
-        "<th>Price</th>"+
-    "</tr>");
+out.print("<div align='left'><table>"+
+    "<th><h2>"+productName+"</h2></th>");
+   // String imageUrl= rst.getString(4);
+
+  
+  if(productImageURL!=null) {
+   out.print("<tr><td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+productImageURL+"\"></td>");
+   }
+
+    if (productImageBinary!= null){
+       out.print("<td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px;width: 380px;;' src=\"displayImage.jsp?id="+productId+"\"></td></tr>");
+
+}
+out.print("<tr>"+
+    "<th>Id</th>"+
+    "<th>Price</th>"+
+"</tr>");
 
     out.print("<tbody><tr><td align='center'>"+productId+"</td><td>"+currFormat.format(productPrice)+"</td></tr>");
 
 
-out.print("</tbody></table>");
+out.print("</tbody></table></div>");
 out.print("<h2><a href="+cartLink+">Add to Cart</a></h2>");
 out.print("<h2><a href=listprod.jsp>Continue Shopping</a></h2>");
     }
-con.close();
+    closeConnection();  
 
-}
-catch (SQLException ex) { 	
-	out.println(ex); 
-}
+
+
+
+
 // TODO: If there is a productImageURL, display using IMG tag
 		
 // TODO: Retrieve any image stored directly in database. Note: Call displayImage.jsp with product id as parameter.

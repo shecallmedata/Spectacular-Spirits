@@ -36,10 +36,14 @@ Public methods:
 		con = DriverManager.getConnection(url, uid, pw);
 	}
    
-	public void closeConnection() throws SQLException 
+	public void closeConnection()
 	{
-		if (con != null)
-			con.close();
-		con = null;
+		try {
+			if (con != null)
+				con.close();
+			con = null;	
+		}
+		catch (SQLException e)
+		{ /* Ignore connection close error */ }
 	}
 %>

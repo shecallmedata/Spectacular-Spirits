@@ -6,32 +6,32 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Map,java.math.BigDecimal" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
+<%@ page import="java.util.Locale" %>
+
 <!DOCTYPE html>
 <html>
-	
-
 <head>
-</head>
-<h2 class="header">Spectacular Spirits</h2>
+
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
+	<style>
+		table, th, td {
+	background-color: rgba(241, 112, 52, 0.5);
+}
+	</style>
+	<%@ include file="header.jsp" %>
+	<body style="background: url(https://www.luxurylifestylemag.co.uk/wp-content/uploads/2019/09/bigstock-Glass-Of-Whiskey-With-Natural-292232818.jpg); background-repeat: no-repeat; background-size: 100%;">
+
+		
+	
+		
+	<hr />
+	<div id="main-content"></div>
 
 
-<style>
-	.header {
-	 overflow: hidden;
-	 background-color: powderblue ;
-	 padding: 20px 10px;
-	 text-align: center;
-	 font-family: serif;
-	 color: rgb(1, 1, 39);
-   }
-   .pstyle{
-	   font-size: large
-	   font-weight: bold;
-   }
-    .alnright { text-align: right; }
- </style>
- 
-	 <body style="color:rgb(1, 1, 39);font-size:20px; background-color:aliceblue;">
 
 		<% 
 		// Get customer id
@@ -103,6 +103,7 @@
 		
 					double total =0;
 					Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
+					
 					while (iterator.hasNext())
 					{ 
 						Map.Entry<String, ArrayList<Object>> entry = iterator.next();
@@ -112,7 +113,7 @@
 						out.print("<td>"+product.get(1)+"</td>");
 						out.print("<td align=\"center\">"+product.get(3)+"</td>");
 						String price = (String) product.get(2);
-						double pr = Double.parseDouble(price);
+						double pr = Double.parseDouble(price.substring(1));
 						int qty = ( (Integer)product.get(3)).intValue();
 						out.print("<td align=\"right\">"+currFormat.format(pr)+"</td>");
 						   out.print("<td align=\"right\">"+currFormat.format(pr*qty)+"</td></tr>");
@@ -142,7 +143,7 @@
 					out.println("<h1>Your order reference number is: "+orderId+"</h1>");
 					out.println("<h1>Shipping to customer: "+custId+" Name: "+custName+"</h1>");
 		
-					out.println("<h2><a href=\"shop.html\">Return to shopping</a></h2>");
+					out.println("<h2><a href=\"index.jsp\">Return to shopping</a></h2>");
 					
 					// Clear session variables (cart)
 					session.setAttribute("productList", null);

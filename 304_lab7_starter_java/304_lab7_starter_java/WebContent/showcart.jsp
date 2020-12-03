@@ -8,9 +8,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
 	<style>
-		.table {
-			margin: 0 auto;
+			table, th, td {
+			background-color: rgba(241, 112, 52, 0.5);
 		}
 	
 		.pcolor {
@@ -25,14 +31,6 @@
   width: 45%;
   height: 45%;
 }
-   .header {
-    overflow: hidden;
-    background-color: powderblue ;
-    padding: 20px 10px;
-    text-align: center;
-    font-family: serif;
-	color:rgb(1, 1, 39);
-  }
   .pcaption{
 	padding: 20px;
 
@@ -40,20 +38,18 @@
   }
 
 		</style>
-		<head>
-			<header style= "margin: 20px;
-			padding: 40px;">
-		
-		
+	<%@ include file="header.jsp" %>
+	<body style="background: url(otherImages/distilley2.jpg); ">
 
-
-</head>
-<h2 class="header">Spectacular Spirits</h2>
-<body>
+	
+	
+		
+	<hr />
+	
 <figure>
-<img src="lahey2.jpg"  width="491" height="363" class="pimage">
+<img src="lahey2.jpg"  width="auto" height="auto" class="pimage">
 </figure>
-    <body style="color:rgb(1, 1, 39);font-size:20px; background-color:aliceblue;">
+    <body style="color:rgb(1, 1, 39);font-size:20px;">
 </head>
 <body>
 	<script>
@@ -75,8 +71,8 @@ else
 {
 	NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
 
-	out.println("<h1>Your Shopping Cart</h1>");
-	out.print("<table><tr><th>Product Id</th><th>Product Name</th><th>Quantity</th>");
+	out.print("");
+	out.print("<table><th><h1>Shopping Cart</h1></th></table><table><tr><th>Product Id</th><th>Product Name</th><th>Quantity</th>");
 	out.println("<th>Price</th><th>Subtotal</th></tr>");
 
 	double total =0;
@@ -150,6 +146,6 @@ else
 	out.println("<h2><a href=\"checkout.jsp\">Check Out</a></h2>");
 }
 %>
-<h2><a href="listprod.jsp">Continue Shopping</a></h2>
+<h2><a href="listprod.jsp?productName=">Continue Shopping</a></h2>
 </body>
 </html> 
