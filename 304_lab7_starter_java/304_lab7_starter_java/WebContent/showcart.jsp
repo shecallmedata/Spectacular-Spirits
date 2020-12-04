@@ -47,8 +47,10 @@
 	<hr />
 	
 <figure>
-<img src="lahey2.jpg"  width="auto" height="auto" class="pimage">
+<img src="lahey2.jpg"  width="auto" height="150px" class="pimage">
+<figcaption><table><td><div style="text-align:center; font-size:20px;"><b>Add Another little drinky poo... for courage!</b></div></td></table></figcaption>
 </figure>
+
     <body style="color:rgb(1, 1, 39);font-size:20px;">
 </head>
 <body>

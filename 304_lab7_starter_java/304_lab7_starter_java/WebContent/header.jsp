@@ -42,7 +42,7 @@
                 <br><br><br><br>
                 
             <a href="index.jsp"><li><img src="otherImages/home.png" alt="Home" height="60" ></li></a>
-            <a href="addcart.jsp"><li><img src="otherImages/cart.png" alt="Cart" height="60" ></li></a>
+            <a href="showcart.jsp"><li><img src="otherImages/cart.png" alt="Cart" height="60" ></li></a>
             <a href="listprod.jsp?productName="><li>Shop</li></a>
             <a href="customer.jsp"><li>Customer</li></a>
             <a href="admin.jsp"><li>Administators</li></a>
