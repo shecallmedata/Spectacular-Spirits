@@ -6,14 +6,28 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Date" %>
 <%@ include file="jdbc.jsp" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <%@ include file="header.jsp" %>
-<link rel="stylesheet" type="text/css" href="style.css" />
-</head>
-<body>
 
-<div id="main-content">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="stylesheet.css">
+		<title>
+		</title>
+	</head>
+	<style>
+		table, th, td {
+	background-color: rgba(241, 112, 52, 0.5);
+}
+	</style>
+	<%@ include file="header.jsp" %>
+	<body style="background: url(https://www.luxurylifestylemag.co.uk/wp-content/uploads/2019/09/bigstock-Glass-Of-Whiskey-With-Natural-292232818.jpg); background-repeat: no-repeat; background-size: 100%;">
+
+		
+	
+		
+	<hr />
+	<div id="main-content"></div>
 <%
 
 try{
@@ -33,11 +47,12 @@ try{
     PreparedStatement ps= con.prepareStatement(sql);
     ps.setString(1, username);
     ResultSet rst = ps.executeQuery();
+    out.print("<table>");
     if(rst.next()){
-        out.print("<h2>Sorry, "+username+" already exists</h2><br><h2>please try again</h2>");
+        out.print("<tr><td><h2>Sorry, "+username+" already exists</h2></td></tr><br><tr><td><h2>please try again</h2></td></tr>");
         %>
         <br>
-		<h2><a href="createAccount.jsp">Back to Create Account Page</a></h2>
+    <tr><td><h2><a href="createAccount.jsp">Back to Create Account Page</a></h2></td></tr>
         <%
         return;
     } else if(firstName== null || firstName.equals("") || lastName== null || lastName.equals("") || 
@@ -45,16 +60,16 @@ try{
      city== null || city.equals("") || state== null || state.equals("") ||
      postalCode== null || postalCode.equals("") || country== null || country.equals("") || username== null || 
      username.equals("") || password== null || password.equals("") ){
-        out.print("<h2>Sorry, missing fields</h2><br><h2>Please go back and enter all of the fields</h2>");
+        out.print("<tr><td><h2>Sorry, missing fields</h2></td></tr><br><tr><td><h2>Please go back and enter all of the fields</h2></td></tr>");
         %>
         <br>
-        <h2><a href="createAccount.jsp">Back to Create Account Page</a></h2>
+    <tr><td><h2><a href="createAccount.jsp">Back to Create Account Page</a></h2></td></tr>
         <%
     
     } else if(email == null || !email.contains("@")){
-        out.print("<h2>Sorry, invalid email</h2><br><h2>Please go back and enter a valid email.</h2>");
+        out.print("<tr><td><h2>Sorry, invalid email</h2></td></tr><br><tr><td><h2>Please go back and enter a valid email</h2></td></tr>");
         %> 
-        <h2><a href="createAccount.jsp">Back to Create Account Page</a></h2>
+    <tr><td><h2><a href="createAccount.jsp">Back to Create Account Page</a></h2></td></tr>
         <%
         return;
     
@@ -79,12 +94,13 @@ try{
         ResultSet rst3 = ps3.executeQuery();
         rst3.next();
         Integer custId = rst3.getInt("customerId");
-        out.println("<h2>Your account "+username+ " has been created</h2>");
+        out.println("<tr><td><h2>Your account "+username+ " has been created</h2></td></tr>");
         %>
         <br>
-		<h2><a href="login.jsp">Click here to login.</a></h2>
+    <tr><td><h2><a href="login.jsp">Click here to login.</a></h2></td></tr>
         <%
     }
+    out.print("</table>");
 }
 
 catch (SQLException ex) { 	
