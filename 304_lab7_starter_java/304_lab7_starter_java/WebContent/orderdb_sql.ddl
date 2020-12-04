@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS ordersummary;
 DROP TABLE IF EXISTS paymentmethod;
 DROP TABLE IF EXISTS customer;
+--This creates a table that we reference to compute the cost of tax and shipping.
+DROP TABLE IF EXISTS shipping;
 
 
 CREATE TABLE customer (
@@ -109,6 +111,13 @@ CREATE TABLE shipment (
     PRIMARY KEY (shipmentId),
     FOREIGN KEY (warehouseId) REFERENCES warehouse(warehouseId)
         ON UPDATE CASCADE ON DELETE NO ACTION
+);
+CREATE TABLE shipping (
+    sID            INT IDENTITY,
+    state          VARCHAR(3),
+    tax            DECIMAL(10,2),
+    shipCost       DECIMAL(10,2),
+    PRIMARY KEY (sID)
 );
 
 CREATE TABLE productinventory ( 
@@ -259,4 +268,9 @@ UPDATE Product SET productImageURL = 'img/27.jpg' WHERE ProductId = 27;
 UPDATE Product SET productImageURL = 'img/28.jpg' WHERE ProductId = 28;
 UPDATE Product SET productImageURL = 'img/29.jpg' WHERE ProductId = 29;
 
+INSERT INTO shipping (state,tax,shipCost) VALUES ('MB','1.07','10');
+INSERT INTO shipping (state,tax,shipCost) VALUES ('MA','1.06','25');
+INSERT INTO shipping (state,tax,shipCost) VALUES ('IL','1.06','25');
+INSERT INTO shipping (state,tax,shipCost) VALUES ('BC','1.12','10');
+INSERT INTO shipping (state,tax,shipCost) VALUES ('IA','1.06','25');
 -- Loads image data for product 1

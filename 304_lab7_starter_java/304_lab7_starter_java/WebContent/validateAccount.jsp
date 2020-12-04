@@ -95,6 +95,7 @@ try{
         rst3.next();
         Integer custId = rst3.getInt("customerId");
         out.println("<tr><td><h2>Your account "+username+ " has been created</h2></td></tr>");
+        out.println("<tr><td><h2>Your Customer Id is : "+custId+"</h2></td></tr>");
         %>
         <br>
     <tr><td><h2><a href="login.jsp">Click here to login.</a></h2></td></tr>

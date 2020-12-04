@@ -14,7 +14,7 @@
 <body style="background: url(otherImages/distilley2.jpg); ">
 	<%@ include file="header.jsp" %>
 
-
+<br>
 
 	<table><tr><th><div align="right"><h1 style= "color: white">Please Login to System</h1></div></th></tr></table>
 

@@ -68,11 +68,12 @@
             <tr>
                 <td><div align="left">Password:</div></td>
                 <td><input type="password" name="pw" placeholder="Enter a Password..." size=30 maxlength="20"></td>
-            </tr>
-            </table>
-<br/>
+            </tr></table>
+        
 <input class="submit" type="submit" name="createAccount" value="Create Account">
 </form>
+
+
 <%
 %> 
 </div>

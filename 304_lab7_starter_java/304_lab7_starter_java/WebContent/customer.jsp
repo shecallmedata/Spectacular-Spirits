@@ -62,10 +62,9 @@ try (Connection con=DriverManager.getConnection(url, uid, pw); Statement stmt = 
 	ResultSet rst = ps.executeQuery();
 
 	if(rst.next()){
-		out.println("<table><th><h2>Customer Profile</h2></th></table>");
-    	out.print("<table border='1' colspan='5'><thead>"+
+    	out.print("<table border='1' colspan='5'><th colspan=\"2\"><h2>Customer Profile</h2></th>");
 			
-			"<tr><th>Id</th>"+
+			out.print("<tr><th>Id</th>"+
 				"<td>"+rst.getString(1)+"</td>"+
 			"</tr>"+
         	

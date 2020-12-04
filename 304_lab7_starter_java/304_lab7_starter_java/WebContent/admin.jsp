@@ -27,7 +27,7 @@ table, th, td {
 
 
 <div id="main-content">
-<table><th><h2 align="left">Administrator Sales Report by Day</h2></th></table>
+<table><th colspan=\"2\"><h2 align="left">Administrator Sales Report by Day</h2></th>
 <%
 try{
     getConnection();
@@ -38,7 +38,7 @@ NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"
 String sql = "select year(orderDate),month(orderDate),day(orderDate), sum(totalAmount) from ordersummary group by year(orderDate), month(orderDate), day(orderDate)";
 PreparedStatement ps = con.prepareStatement(sql);
 ResultSet rst = ps.executeQuery();
-out.println("<table><tr>"+
+out.println("<tr>"+
     "<th>"+"Order Date"+"</th>"+
     "<th>"+"Total Order Amount" +"</th></tr>");
 while(rst.next()){

@@ -19,21 +19,17 @@
 <style>
       
     table, th, td {
+       
+        align-items: left;
         background-color: rgba(241, 112, 52, 0.5);
+        
 }
-
-    	
-   .pstyle{
-	   font-size: large
-	   font-weight: bold;
-   }
-    .alnright { text-align: right; }
  </style>
  
 
 
  <body style="background: url(otherImages/distilley2.jpg); background-size: 100%;">
-
+    
 <%@ include file="header.jsp" %>
 <%@ include file="jdbc.jsp" %>
 <%
@@ -76,17 +72,17 @@ String pnameEncoded = java.net.URLEncoder.encode(productName,"UTF-8").replace("+
 String cartLink = "addcart.jsp?id="+productId+"&name="+pnameEncoded+"&price="+productPrice;
 //String binaryImage =  "displayImage.jsp?id="+productId;
 
-out.print("<div align='left'><table>"+
+out.print("<br><table>"+
     "<th><h2>"+productName+"</h2></th>");
    // String imageUrl= rst.getString(4);
 
   
   if(productImageURL!=null) {
-   out.print("<tr><td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+productImageURL+"\"></td>");
+   out.print("<tr><td style='text-align:left;' class='pstyle;' colspan = 2><img style='height:250px; width: auto;' src=\""+productImageURL+"\"></td>");
    }
 
     if (productImageBinary!= null){
-       out.print("<td style='text-align:center;' class='pstyle;' colspan = 2><img style='height:250px;width: 380px;;' src=\"displayImage.jsp?id="+productId+"\"></td></tr>");
+       out.print("<td style='text-align:left;' class='pstyle;' colspan = 2><img style='height:250px;width: 380px;' src=\"displayImage.jsp?id="+productId+"\"></td></tr>");
 
 }
 out.print("<tr>"+
@@ -95,11 +91,10 @@ out.print("<tr>"+
 "</tr>");
 
     out.print("<tbody><tr><td align='center'>"+productId+"</td><td>"+currFormat.format(productPrice)+"</td></tr>");
-
-
-out.print("</tbody></table></div>");
-out.print("<h2><a href="+cartLink+">Add to Cart</a></h2>");
-out.print("<h2><a href=listprod.jsp>Continue Shopping</a></h2>");
+     
+        out.print("<td colspan=\"2\"><h2><a href="+cartLink+">Add to Cart</a></h2></td>");
+        out.print("<tr><td colspan=\"2\"><h2><a href=listprod.jsp>Continue Shopping</a></h2></td></tr></table>");
+       
     }
     closeConnection();  
 

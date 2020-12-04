@@ -61,7 +61,7 @@ try (Connection con=DriverManager.getConnection(url, uid, pw);
 	ResultSet rst = stmt.executeQuery(sql);	
 	NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
 	out.print("<table border='1'><T1>"+
-		"<tr align='center'><th><h1 align='center'>Order Information</h1></th></tr>"+
+		"<tr align='center'><th colspan=\"5\"><h1 align='center'>Order Information</h1></th></tr>"+
 		"<tr>"+
 
 			"<th>order Id</th>"+

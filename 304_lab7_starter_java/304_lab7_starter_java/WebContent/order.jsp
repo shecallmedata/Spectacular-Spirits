@@ -1,13 +1,11 @@
-<%@ page import="java.sql.*,java.util.Locale" %>
+<%@ page import="java.sql.*" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="java.util.Map,java.math.BigDecimal" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
 <%@ page import="java.util.Locale" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +19,10 @@
 		table, th, td {
 	background-color: rgba(241, 112, 52, 0.5);
 }
+div{
+	text-emphasis-color:white;
+	color:white;
+}
 	</style>
 	<%@ include file="header.jsp" %>
 	<body style="background: url(https://www.luxurylifestylemag.co.uk/wp-content/uploads/2019/09/bigstock-Glass-Of-Whiskey-With-Natural-292232818.jpg); background-repeat: no-repeat; background-size: 100%;">
@@ -30,131 +32,192 @@
 		
 	<hr />
 	<div id="main-content"></div>
+<% 
+// Get customer id
+String custId = request.getParameter("customerId");
+//int numcustId = Integer.parseInt(request.getParameter("customerId"));
+//Integer numcustId = Integer.valueOf(custId);
+@SuppressWarnings({"unchecked"})
+HashMap<String, ArrayList<Object>> productList = (HashMap<String, ArrayList<Object>>) session.getAttribute("productList");
+	String url = "jdbc:sqlserver://db:1433;DatabaseName=tempdb;";
+	String uid = "SA";
+	String pw = "YourStrong@Passw0rd";
+	try
+	{	// Load driver class
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	}
+	catch (java.lang.ClassNotFoundException e)
+	{
+		out.println("ClassNotFoundException: " +e);
+	}
+	try (Connection con=DriverManager.getConnection(url, uid, pw);){
+	String sql = "SELECT * FROM Customer WHERE customerId= ?";
+    PreparedStatement ps = con.prepareStatement(sql);
+    ps.setString(1, custId);
+    ResultSet rst = ps.executeQuery();
+ // Determine if there are products in the shopping cart
+ // If either are not true, display an error message
+ NumberFormat currFormat = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
 
+ out.print("<table>");
+	 if(rst.next() & productList!=null){
+    	
+		
+    	Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
+    	
+    	// Save order information to database in Order table. Use retrieval of auto-generated keys to generate OrderID.
+    	// Total is saved as zero and update after iterating through order
+		String insertSQL = ("INSERT into ordersummary (totalAmount, customerId) VALUES (?, ?)");
+		PreparedStatement ps2 = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);	
+		ps2.setDouble(1, 0.0);
+		ps2.setString(2, custId);
+		
 
-
-		<% 
-		// Get customer id
-		String custId = request.getParameter("customerId");
-		@SuppressWarnings({"unchecked"})
-		HashMap<String, ArrayList<Object>> productList = (HashMap<String, ArrayList<Object>>) session.getAttribute("productList");
+		ps2.executeUpdate();
+	ResultSet keys = ps2.getGeneratedKeys();
+	keys.next();
+	int orderId = keys.getInt(1);
+	double total=0.0;
+	out.println("<tr><th colspan=\"5\"><h2>Your Order Summary</h2></th></tr>");
+	out.print("<tr>"+
+		"<th>Product Id</th>"+
+		"<th>Product Name</th>"+
+		"<th>Quantity</th>"+
+		"<th>Price</th>"+
+		"<th>Subtotal</th>"+
+	"</tr>");
+	
+	while (iterator.hasNext())
+	{ 
+		Map.Entry<String, ArrayList<Object>> entry = iterator.next();
+		ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
+		String productId = (String) product.get(0);
+		String productName = (String) product.get(1);
+		String price = (String) product.get(2);
+		double pr = Double.parseDouble(price);
+		int pid = Integer.parseInt(productId);
+		int qty = ( (Integer)product.get(3)).intValue();
+		double subtotal = (pr*qty);
 		
-		if (custId == null || custId.equals(""))
-			out.println("<h1>Invalid customer id.  Go back to the previous page and try again.</h1>");
-		else if (productList == null)
-			out.println("<h1>Your shopping cart is empty!</h1>");
-		else
-		{
-			// Check if customer id is a number
-			int num=-1;
-			try
-			{
-				num = Integer.parseInt(custId);
-			} 
-			catch(Exception e)
-			{
-				out.println("<h1>Invalid customer id.  Go back to the previous page and try again.</h1>");
-				return;
-			}
-				
-			String sql = "SELECT customerId, firstName+' '+lastName FROM Customer WHERE customerId = ?";		
-				
-			String url = "jdbc:sqlserver://db:1433;DatabaseName=tempdb;";
-			String uid = "SA";
-			String pw = "YourStrong@Passw0rd";
-			NumberFormat currFormat = NumberFormat.getCurrencyInstance(Locale.US);
+		total += subtotal;
 		
-			try
-			{	// Load driver class
-				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			}
-			catch (java.lang.ClassNotFoundException e)
-			{
-				out.println("ClassNotFoundException: " +e);
-			}
+		out.print("<tr>"+
+						"<td>"+productId+"</td>"+
+						"<td>"+productName+"</td>"+
+						"<td>"+qty+"</td>"+
+						"<td>"+currFormat.format(pr)+"</td>"+
+						"<td>"+currFormat.format(subtotal)+"</td>"+
+					"</tr>");	
 		
-			try ( Connection con = DriverManager.getConnection(url, uid, pw);) 
-			{
-				PreparedStatement pstmt = con.prepareStatement(sql);
-				pstmt.setInt(1, num);
-				ResultSet rst = pstmt.executeQuery();
-				int orderId=0;
-				String custName = "";
+		// Insert each item into orderproduct table using OrderId from previous INSERT
+		String insertOrderProductSQL = "INSERT Orderproduct (orderId, productId, quantity, price) VALUES(?, ?, ?, ?)";
+		PreparedStatement pstInsertOP = con.prepareStatement(insertOrderProductSQL);
+		pstInsertOP.setInt(1, orderId);
+		pstInsertOP.setInt(2, pid);
+		pstInsertOP.setInt(3, qty);
+		pstInsertOP.setDouble(4, pr);
 		
-				if (!rst.next())
-					out.println("<h1>Invalid customer id.  Go back to the previous page and try again.</h1>");
-				else
-				{	custName = rst.getString(2);
+		pstInsertOP.executeUpdate();
 		
-					// Enter order information into database
-					sql = "INSERT INTO OrderSummary (customerId, totalAmount, orderDate) VALUES(?, 0, ?);";
+	}
 		
-					// Retrieve auto-generated key for orderId
-					pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-					pstmt.setInt(1, num);
-					pstmt.setTimestamp(2, new java.sql.Timestamp(new Date().getTime()));
-					pstmt.executeUpdate();
-					ResultSet keys = pstmt.getGeneratedKeys();
-					keys.next();
-					orderId = keys.getInt(1);
-		
-					out.println("<h1>Your Order Summary</h1>");
-						out.println("<table><tr><th>Product Id</th><th>Product Name</th><th>Quantity</th><th>Price</th><th>Subtotal</th></tr>");
-		
-					double total =0;
-					Iterator<Map.Entry<String, ArrayList<Object>>> iterator = productList.entrySet().iterator();
-					
-					while (iterator.hasNext())
-					{ 
-						Map.Entry<String, ArrayList<Object>> entry = iterator.next();
-						ArrayList<Object> product = (ArrayList<Object>) entry.getValue();
-						String productId = (String) product.get(0);
-						out.print("<tr><td>"+productId+"</td>");
-						out.print("<td>"+product.get(1)+"</td>");
-						out.print("<td align=\"center\">"+product.get(3)+"</td>");
-						String price = (String) product.get(2);
-						double pr = Double.parseDouble(price.substring(1));
-						int qty = ( (Integer)product.get(3)).intValue();
-						out.print("<td align=\"right\">"+currFormat.format(pr)+"</td>");
-						   out.print("<td align=\"right\">"+currFormat.format(pr*qty)+"</td></tr>");
-						out.println("</tr>");
-						total = total +pr*qty;
-		
-						sql = "INSERT INTO OrderProduct (orderId, productId, quantity, price) VALUES(?, ?, ?, ?)";
-						pstmt = con.prepareStatement(sql);
-						pstmt.setInt(1, orderId);
-						pstmt.setInt(2, Integer.parseInt(productId));
-						pstmt.setInt(3, qty);
-						pstmt.setString(4, price);
-						pstmt.executeUpdate();				
-					}
-					out.println("<tr><td colspan=\"4\" align=\"right\"><b>Order Total</b></td>"
-								   +"<td aling=\"right\">"+currFormat.format(total)+"</td></tr>");
-					out.println("</table>");
-		
-					// Update order total
-					sql = "UPDATE OrderSummary SET totalAmount=? WHERE orderId=?";
-					pstmt = con.prepareStatement(sql);
-					pstmt.setDouble(1, total);
-					pstmt.setInt(2, orderId);			
-					pstmt.executeUpdate();						
-		
-					out.println("<h1>Order completed.  Will be shipped soon...</h1>");
-					out.println("<h1>Your order reference number is: "+orderId+"</h1>");
-					out.println("<h1>Shipping to customer: "+custId+" Name: "+custName+"</h1>");
-		
-					out.println("<h2><a href=\"index.jsp\">Return to shopping</a></h2>");
-					
-					// Clear session variables (cart)
-					session.setAttribute("productList", null);
-				}
-			}
-			catch (SQLException ex)
-			{ 	out.println(ex);
-			}	
+	// Update total amount for order record
+	String updateTotalSQL = "UPDATE ordersummary SET totalAmount = ? WHERE orderId = ?";
+	PreparedStatement pstUpdateTotal = con.prepareStatement(updateTotalSQL);
+	pstUpdateTotal.setDouble(1, total);
+	pstUpdateTotal.setInt(2, orderId);
+	pstUpdateTotal.executeUpdate();
+	
+	
+	//order summary
+	out.print("<tr>"+
+		"<td>"+"Subtotal:"+"</td>"+
+		"<td>"+currFormat.format(total)+"</td>"+
+		"</tr>");
+	
+		String stateQuery = "SELECT state FROM customer WHERE customerId=?";
+		PreparedStatement pstState = con.prepareStatement(stateQuery);
+		pstState.setString(1, custId);
+		ResultSet stateRst = pstState.executeQuery();
+	
+		String userState = "AB";
+		if(stateRst.next()){
+			userState = stateRst.getString(1);
 		}
-		%>
+	
+		String shipInfo = "SELECT tax, shipCost FROM shipping WHERE state = ?";
+		PreparedStatement pship = con.prepareStatement(shipInfo);
+		pship.setString(1, userState);
+		ResultSet shipRst = pship.executeQuery();
+		
+		double tax = 0;
+		double shipping = 0;
+	
+		if(shipRst.next()){
+			tax = shipRst.getDouble(1);
+			shipping = shipRst.getDouble(2);
+		}
+	
+		
+		out.print("<tr>"+
+				"<td>Shipping:</td>"+
+				"<td>"+currFormat.format(shipping)+"</td>"+
+				"</tr>");
+
+		out.print("<tr>"+
+					"<td>"+"Taxes:"+"</td>"+
+					"<td>"+currFormat.format(total*tax-total)+"</td>"+
+					"</tr>");	
+		
+				total = total*tax + shipping;
+	
+		out.print("<tr>"+
+					"<td><strong>"+"Total:"+"</strong></td>"+
+					"<td>"+currFormat.format(total)+"</td>"+
+					"</tr></tbody></table>");
+	
+	
+	
+	out.print(" <div><strong>Order completed. Will be shipped soon... <div></div> Order reference number is: "+orderId+" <div></div>Shipping to Customer Id: "+rst.getString(1)+" Name: "+rst.getString(2)+" "+rst.getString(3)+"</strong></div>");
+	//out.print("</div>");
+	
+	productList.clear();
+	session.invalidate();
+	// Head back to homepage after 15 seconds
+	//response.setHeader("Refresh", "15;url=shop.html");
+
+}
+else{
+
+
+
+
+
+		
+	out.println("<div><h2>Your Order Summary</h2></div>");
+	
+	//out.print("<div>");
+	out.print("<div><strong>Invalid customer ID or empty cart.</strong></div>");
+	//out.print("</div>");
+	
+	//clear product list and end session
+	if(productList!=null){productList.clear();}
+	session.invalidate();
+}
+con.close();
+} 
+//catch (SQLException ex) 
+//{ 
+//	out.print("<div>");
+//		out.print("<div></div><strong>Invalid customer ID or empty cart.</strong></div>");
+//		out.print("</div>");
+//} 
+
+
+
+	
+
+%>
 <h2><a href="listprod.jsp?productName=">Continue Shopping</a></h2>
 </BODY>
 </HTML>
-
